@@ -87,12 +87,6 @@
           - kubectl
           - kubernetes-cni
 
-    - name: Copying required files
-      shell: |
-        mkdir -p $HOME/.kube
-        sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-        sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
   handlers:
     - name: docker status
       service: name=docker state=started
