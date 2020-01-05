@@ -87,33 +87,12 @@
           - kubectl
           - kubernetes-cni
 
-    # Initialize the Kubernetes cluster with kubeadm using the below code
-    #- name: Initialize the Kubernetes cluster using kubeadm
-    #  command: kubeadm init
+    - name: Copying required files
+      shell: |
+        mkdir -p $HOME/.kube
+        sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-    # Setup the AWS networking provider and the network policy engine using the below code.
-    # https://github.com/aws/amazon-vpc-cni-k8s
-#    - name: Install AWS pod network
-#      become: false
-#      command: kubectl apply -f aws-k8s-cni.yaml
-
-#    - name: Generate join command
-#      command: kubeadm token create --print-join-command
-#      register: join_command
-#
-#    # Generate kube join command for joining the node to the Kubernetes cluster and store the command in the file named `join-command.sh`
-#    - name: Copy join command to local file
-#      local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command.sh"
-#
-#    - name: Create aws parameter store for kubernates joing command
-#      aws_ssm_parameter_store:
-#        name: "k8s-node-token"
-#        description: "Kubernetes join command"
-#        string_type: "SecureString"
-#        overwrite_value: "always"
-#        value: "{{ lookup('file', './join-command.sh') }}"
-
-  # Setup a handler for checking Docker daemon using the below code.
   handlers:
     - name: docker status
       service: name=docker state=started
